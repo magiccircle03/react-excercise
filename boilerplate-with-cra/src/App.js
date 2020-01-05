@@ -1,15 +1,20 @@
 import React from 'react';
-import { Button } from 'antd';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Home from './pages/Home';
+import Read from './pages/Read';
+import Update from './pages/Update';
 import logo from './logo.svg';
 import './App.css';
-import APITable from './components/APITable';
 
 function App() {
   return (
-    <div className="App">
-      <Button type="primary">버튼</Button>
-      <APITable></APITable>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/Read" component={Read} />
+        <Route exact path="/Update" component={Update} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 

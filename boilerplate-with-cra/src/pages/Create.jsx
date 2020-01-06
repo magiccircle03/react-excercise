@@ -4,7 +4,7 @@ import { Button, Table, Input, Row, Col } from 'antd';
 
 const axios = require('axios');
 
-class Update extends React.Component {
+class Create extends React.Component {
   constructor(props) {
     super(props);
 
@@ -15,20 +15,18 @@ class Update extends React.Component {
       name: '',
       salary: '',
       age: '',
-      id: '',
     };
 
     this.getData = this.getData.bind(this);
-    this.getDataOne = this.getDataOne.bind(this);
-    this.updateData = this.updateData.bind(this);
+    this.submitData = this.submitData.bind(this);
   }
 
-  updateData(id) {
+  submitData() {
     let self = this;
     const config = { headers: { 'Content-Type': 'application/json' } };
 
     axios
-      .put('http://dummy.restapiexample.com/api/v1/update/' + this.state.id, {
+      .post('http://dummy.restapiexample.com/api/v1/create', {
         name: this.state.name,
         salary: this.state.salary,
         age: this.state.age,
@@ -57,11 +55,7 @@ class Update extends React.Component {
             key: colNames[i],
           });
         }
-        colNamesArr.push({
-          title: 'Action',
-          key: 'action',
-          render: () => <a>수정하기</a>,
-        });
+
         self.setState({
           dataSource: response.data,
           columns: colNamesArr,
@@ -73,37 +67,12 @@ class Update extends React.Component {
       });
   }
 
-  getDataOne() {
-    //alert(this.state.id + '번 사원의 정보 조회');
-    let self = this;
-    axios
-      .get('http://dummy.restapiexample.com/api/v1/employee/' + this.state.id)
-      .then(function(response) {
-        console.log(response);
-        let colNames = Object.keys(response.data);
-        //console.log(colNames);
-        self.setState({});
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  }
-
   render() {
     return (
       <div>
         <a href="./">Home으로</a>
-        <h1>Update 연습 페이지</h1>
-        <Button onClick={this.getData}>전체 api 호출</Button>
-        <Input
-          placeholder="특정 사원의 id"
-          onChange={e => {
-            this.setState({
-              id: e.target.value,
-            });
-          }}
-        />
-        {/* <Button onClick={this.getDataOne}>해당 사원 조회</Button> */}
+        <h1>Create 연습 페이지</h1>
+        <Button onClick={this.getData}>api 호출</Button>
         <Row>
           <Col span={6}>
             <Input
@@ -136,7 +105,7 @@ class Update extends React.Component {
             />
           </Col>
           <Col span={6}>
-            <Button onClick={this.updateData}>수정</Button>
+            <Button onClick={this.submitData}>입력</Button>
           </Col>
         </Row>
         <br />
@@ -151,4 +120,4 @@ class Update extends React.Component {
   }
 }
 
-export default Update;
+export default Create;

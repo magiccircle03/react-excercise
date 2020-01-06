@@ -1,12 +1,8 @@
 import React from 'react';
-import { Button, Table } from 'antd';
+import { Button, Table, Input, Row, Col } from 'antd';
 const axios = require('axios');
 
-let dataSource;
-let columns;
-let cnt;
-
-class Read extends React.Component {
+class Delete extends React.Component {
   constructor(props) {
     super(props);
 
@@ -14,9 +10,11 @@ class Read extends React.Component {
       dataSource: [],
       columns: [],
       cnt: 0,
+      empNum: 0,
     };
 
     this.getData = this.getData.bind(this);
+    this.deleteData = this.deleteData.bind(this);
   }
 
   getData() {
@@ -34,6 +32,11 @@ class Read extends React.Component {
             key: colNames[i],
           });
         }
+        colNamesArr.push({
+          title: 'Action',
+          key: 'action',
+          render: () => <a>Delete</a>,
+        });
 
         self.setState({
           dataSource: response.data,
@@ -46,12 +49,46 @@ class Read extends React.Component {
       });
   }
 
+  deleteData() {
+    let num = this.state.empNum;
+
+    let self = this;
+
+    axios
+      .delete('	http://dummy.restapiexample.com/api/v1/delete/' + num)
+      .then(function(response) {
+        console.log(response);
+        console.log(num + '번 사원 삭제됨');
+        self.getData();
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
   render() {
     return (
       <div>
         <a href="./">Home으로</a>
-        <h1>read 연습 페이지</h1>
+        <h1>Delete 연습 페이지</h1>
+
         <Button onClick={this.getData}>api 호출</Button>
+        <Row>
+          <Col span={12}>
+            <Input
+              placeholder="삭제할 사원의 id"
+              onChange={e => {
+                this.setState({
+                  empNum: e.target.value,
+                });
+              }}
+            />
+          </Col>
+          <Col span={12}>
+            <Button onClick={this.deleteData}>삭제</Button>
+          </Col>
+        </Row>
+
         <p>{this.state.cnt}개의 데이터</p>
         <Table
           dataSource={this.state.dataSource}
@@ -63,4 +100,4 @@ class Read extends React.Component {
   }
 }
 
-export default Read;
+export default Delete;

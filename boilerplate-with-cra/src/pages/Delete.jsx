@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Table, Input, Row, Col } from 'antd';
+import { Button, Table, Input, Row, Col, Popconfirm } from 'antd';
 const axios = require('axios');
 
 class Delete extends React.Component {
@@ -11,6 +11,7 @@ class Delete extends React.Component {
       columns: [],
       cnt: 0,
       empNum: 0,
+      loading: false,
     };
 
     this.getData = this.getData.bind(this);
@@ -19,13 +20,16 @@ class Delete extends React.Component {
 
   getData() {
     let self = this;
+    self.setState({
+      loading: true,
+    });
     axios
       .get('http://dummy.restapiexample.com/api/v1/employees')
       .then(function(response) {
         let colNames = Object.keys(response.data[0]);
         let colNamesArr = [];
 
-        for (let i = 0; i < colNames.length; i++) {
+        for (let i in colNames) {
           colNamesArr.push({
             title: colNames[i],
             dataIndex: colNames[i],
@@ -35,13 +39,26 @@ class Delete extends React.Component {
         colNamesArr.push({
           title: 'Action',
           key: 'action',
-          render: () => <a>Delete</a>,
+          render: record => (
+            <Popconfirm
+              placement="leftTop"
+              title="삭제할까요?"
+              onConfirm={() => {
+                self.deleteData(record.id);
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <a>delete</a>
+            </Popconfirm>
+          ),
         });
 
         self.setState({
           dataSource: response.data,
           columns: colNamesArr,
           cnt: response.data.length,
+          loading: false,
         });
       })
       .catch(function(error) {
@@ -49,9 +66,7 @@ class Delete extends React.Component {
       });
   }
 
-  deleteData() {
-    let num = this.state.empNum;
-
+  deleteData(num) {
     let self = this;
 
     axios
@@ -73,24 +88,10 @@ class Delete extends React.Component {
         <h1>Delete 연습 페이지</h1>
 
         <Button onClick={this.getData}>api 호출</Button>
-        <Row>
-          <Col span={12}>
-            <Input
-              placeholder="삭제할 사원의 id"
-              onChange={e => {
-                this.setState({
-                  empNum: e.target.value,
-                });
-              }}
-            />
-          </Col>
-          <Col span={12}>
-            <Button onClick={this.deleteData}>삭제</Button>
-          </Col>
-        </Row>
 
         <p>{this.state.cnt}개의 데이터</p>
         <Table
+          loading={this.state.loading}
           dataSource={this.state.dataSource}
           columns={this.state.columns}
           rowKey="id"

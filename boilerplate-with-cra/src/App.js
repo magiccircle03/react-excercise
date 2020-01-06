@@ -12,11 +12,11 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
+        <Route path="/Read" component={Read} />
+        <Route path="/Update" component={Update} />
+        <Route path="/Create" component={Create} />
+        <Route path="/Delete" component={Delete} />
         <Route exact path="/" component={Home} />
-        <Route exact path="/Read" component={Read} />
-        <Route exact path="/Update" component={Update} />
-        <Route exact path="/Create" component={Create} />
-        <Route exact path="/Delete" component={Delete} />
       </Switch>
     </BrowserRouter>
   );

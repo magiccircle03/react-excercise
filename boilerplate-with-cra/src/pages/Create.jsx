@@ -15,6 +15,7 @@ class Create extends React.Component {
       name: '',
       salary: '',
       age: '',
+      loading: false,
     };
 
     this.getData = this.getData.bind(this);
@@ -23,6 +24,7 @@ class Create extends React.Component {
 
   submitData() {
     let self = this;
+
     const config = { headers: { 'Content-Type': 'application/json' } };
 
     axios
@@ -42,13 +44,16 @@ class Create extends React.Component {
 
   getData() {
     let self = this;
+    self.setState({
+      loading: true,
+    });
     axios
       .get('http://dummy.restapiexample.com/api/v1/employees')
       .then(function(response) {
         let colNames = Object.keys(response.data[0]);
         let colNamesArr = [];
 
-        for (let i = 0; i < colNames.length; i++) {
+        for (let i in colNames) {
           colNamesArr.push({
             title: colNames[i],
             dataIndex: colNames[i],
@@ -60,6 +65,7 @@ class Create extends React.Component {
           dataSource: response.data,
           columns: colNamesArr,
           cnt: response.data.length,
+          loading: false,
         });
       })
       .catch(function(error) {
@@ -111,6 +117,7 @@ class Create extends React.Component {
         <br />
         <p>{this.state.cnt}개의 데이터</p>
         <Table
+          loading={this.state.loading}
           dataSource={this.state.dataSource}
           columns={this.state.columns}
           rowKey="id"

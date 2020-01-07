@@ -13,19 +13,15 @@ class Delete extends React.Component {
       empNum: 0,
       loading: false,
     };
-
-    this.getData = this.getData.bind(this);
-    this.deleteData = this.deleteData.bind(this);
   }
 
-  getData() {
-    let self = this;
-    self.setState({
+  getData = () => {
+    this.setState({
       loading: true,
     });
     axios
       .get('http://dummy.restapiexample.com/api/v1/employees')
-      .then(function(response) {
+      .then(response => {
         let colNames = Object.keys(response.data[0]);
         let colNamesArr = [];
 
@@ -44,7 +40,7 @@ class Delete extends React.Component {
               placement="leftTop"
               title="삭제할까요?"
               onConfirm={() => {
-                self.deleteData(record.id);
+                this.deleteData(record.id);
               }}
               okText="Yes"
               cancelText="No"
@@ -54,32 +50,30 @@ class Delete extends React.Component {
           ),
         });
 
-        self.setState({
+        this.setState({
           dataSource: response.data,
           columns: colNamesArr,
           cnt: response.data.length,
           loading: false,
         });
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error);
       });
-  }
+  };
 
-  deleteData(num) {
-    let self = this;
-
+  deleteData = num => {
     axios
       .delete('	http://dummy.restapiexample.com/api/v1/delete/' + num)
-      .then(function(response) {
+      .then(response => {
         console.log(response);
         console.log(num + '번 사원 삭제됨');
-        self.getData();
+        this.getData();
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error);
       });
-  }
+  };
 
   render() {
     return (

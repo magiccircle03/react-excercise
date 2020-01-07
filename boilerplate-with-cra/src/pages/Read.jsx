@@ -12,19 +12,16 @@ class Read extends React.Component {
       cnt: 0,
       loading: false,
     };
-
-    this.getData = this.getData.bind(this);
   }
 
-  getData() {
-    let self = this;
-    self.setState({
+  getData = () => {
+    this.setState({
       loading: true,
     });
 
     axios
       .get('http://dummy.restapiexample.com/api/v1/employees')
-      .then(function(response) {
+      .then(response => {
         let colNames = Object.keys(response.data[0]);
         let colNamesArr = [];
 
@@ -36,17 +33,17 @@ class Read extends React.Component {
           });
         }
 
-        self.setState({
+        this.setState({
           dataSource: response.data,
           columns: colNamesArr,
           cnt: response.data.length,
           loading: false,
         });
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error);
       });
-  }
+  };
 
   render() {
     return (

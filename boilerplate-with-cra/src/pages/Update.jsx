@@ -19,9 +19,6 @@ class Update extends React.Component {
       visible: false,
       loading: false,
     };
-
-    this.getData = this.getData.bind(this);
-    this.updateData = this.updateData.bind(this);
   }
 
   showModal = num => {
@@ -46,8 +43,7 @@ class Update extends React.Component {
     });
   };
 
-  updateData(id) {
-    let self = this;
+  updateData = id => {
     const config = { headers: { 'Content-Type': 'application/json' } };
 
     axios
@@ -56,23 +52,22 @@ class Update extends React.Component {
         salary: this.state.salary,
         age: this.state.age,
       })
-      .then(function(response) {
+      .then(response => {
         console.log(response);
-        self.getData();
+        this.getData();
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error);
       }, config);
-  }
+  };
 
-  getData() {
-    let self = this;
-    self.setState({
+  getData = () => {
+    this.setState({
       loading: true,
     });
     axios
       .get('http://dummy.restapiexample.com/api/v1/employees')
-      .then(function(response) {
+      .then(response => {
         let colNames = Object.keys(response.data[0]);
         let colNamesArr = [];
 
@@ -89,24 +84,24 @@ class Update extends React.Component {
           render: record => (
             <a
               onClick={() => {
-                self.showModal(record.id);
+                this.showModal(record.id);
               }}
             >
               수정하기
             </a>
           ),
         });
-        self.setState({
+        this.setState({
           dataSource: response.data,
           columns: colNamesArr,
           cnt: response.data.length,
           loading: false,
         });
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error);
       });
-  }
+  };
 
   render() {
     return (
